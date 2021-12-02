@@ -1,0 +1,40 @@
+server:
+  port: 8088
+  servlet:
+    context-path: /
+    session:
+      timeout: PT1M
+
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://82.157.156.205:3306/gaoshu_blog?serverTimezone=Asia/Shanghai&useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&useSSL=false&allowPublicKeyRetrieval=true
+    username: root
+    password: 123456
+
+#  redis:
+#    host: ${REDIS_HOST:127.0.0.1}
+#    port: ${REDIS_PORT:6379}
+#    password: ${REDIS_PASSWORD:123456}
+#    database: 13
+#    lettuce:
+#      pool:
+#        max-active: 300
+
+
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true
+    auto-mapping-behavior: full
+  #    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#  mapper-locations: classpath*:mapper/**/*Mapper.xml
+  mapper-locations: classpath:/mapper/xml/*.xml
+  global-config:
+    # 逻辑删除配置
+    db-config:
+      logic-delete-field: deleted  # 全局逻辑删除的实体字段名(since 3.3.0,配置后可以忽略不配置步骤2)
+      # 删除前
+      logic-not-delete-value: 1
+      # 删除后
+      logic-delete-value: 0
+
