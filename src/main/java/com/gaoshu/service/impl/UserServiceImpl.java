@@ -32,7 +32,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public List<User> getUserByName(String username) {
-        return lambdaQuery().eq(User::getName, username).list();
+        return lambdaQuery().eq(User::getUsername, username).list();
     }
 
     @Override
@@ -57,10 +57,10 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
 
     @Override
     public void register(User user) {
-        if (StrUtil.isEmpty(user.getName()) || StrUtil.isEmpty(user.getPassword())) {
+        if (StrUtil.isEmpty(user.getUsername()) || StrUtil.isEmpty(user.getPassword())) {
             throw new RuntimeException("用户名密码不可为空");
         }
-        String md5Password = SecureUtil.md5(user.getName() + user.getPassword());
+        String md5Password = SecureUtil.md5(user.getUsername() + user.getPassword());
         user.setPassword(md5Password);
         save(user);
     }
@@ -68,7 +68,7 @@ public class UserServiceImpl extends ServiceImpl<UserMapper, User> implements IU
     @Override
     public void updatePassword(String userName, String password) {
         String md5Password = SecureUtil.md5(userName+password);
-        lambdaUpdate().set(User::getPassword, md5Password).eq(User::getName, userName).update();
+        lambdaUpdate().set(User::getPassword, md5Password).eq(User::getUsername, userName).update();
     }
 
     @Override

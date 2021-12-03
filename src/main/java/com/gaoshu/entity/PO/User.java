@@ -10,6 +10,7 @@ import lombok.EqualsAndHashCode;
 import lombok.experimental.Accessors;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * <p>
@@ -33,7 +34,7 @@ public class User implements Serializable {
     private Long id;
 
     @ApiModelProperty(value = "姓名")
-    private String name;
+    private String username;
 
     @ApiModelProperty(value = "年龄")
     private Integer age;
@@ -46,5 +47,17 @@ public class User implements Serializable {
 
     @ApiModelProperty(value = "密码")
     private String password;
+
+    @ApiModelProperty(value = "昵称")
+    private String nickname;
+
+    @ApiModelProperty(value = "创建时间")
+    private Date createTime;
+
+    @ApiModelProperty(value = "更新时间")
+    private Date updateTime;
+
+    @ApiModelProperty(value = "状态")
+    private Integer status;
 
 }

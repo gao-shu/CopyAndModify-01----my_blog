@@ -1,21 +1,20 @@
 package com.gaoshu.controller.admin;
 
 import cn.hutool.crypto.SecureUtil;
-import com.gaoshu.common.Constant;
+import com.gaoshu.common.Constants;
 import com.gaoshu.common.GlobalException;
 import com.gaoshu.entity.PO.User;
 import com.gaoshu.entity.VO.Result;
 import com.gaoshu.entity.VO.UserVo;
 import com.gaoshu.service.IUserService;
-import com.google.code.kaptcha.Constants;
 import com.google.code.kaptcha.Producer;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.imageio.ImageIO;
 import javax.servlet.ServletOutputStream;
@@ -32,7 +31,7 @@ import java.util.List;
  * @author: gaoshu
  * @date: 2021/11/30 16:03
  */
-@RestController
+@Controller
 @RequestMapping("/admin")
 @Api(tags = "登陆模块")
 public class LoginSessionController {
@@ -45,10 +44,20 @@ public class LoginSessionController {
 
     /**
      * 获取图片验证
+     * @return
+     */
+    @GetMapping("/login")
+    @ApiOperation("跳转到请求页")
+    public String admin()  {
+        return "admin/login";
+    }
+
+    /**
+     * 获取图片验证
      * @param response
      * @param session
      */
-    @GetMapping("/getKaptchaImage")
+    @GetMapping(value = {"/captcha","/captcha.do"})
     @ApiOperation("获取验证图片")
     public void getKaptchaImage(HttpServletResponse response, HttpSession session)  {
         ServletOutputStream out = null;
@@ -60,7 +69,7 @@ public class LoginSessionController {
             response.setContentType("image/jpeg");
             //生成验证码
             String capText = producer.createText();
-            session.setAttribute(Constants.KAPTCHA_SESSION_KEY, capText);
+            session.setAttribute(com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY, capText);
             //向客户端写出
             BufferedImage bi = producer.createImage(capText);
             out = response.getOutputStream();
@@ -79,16 +88,17 @@ public class LoginSessionController {
         }
     }
 
-    @PostMapping("/login")
+    @PostMapping("/doLogin")
     @ApiOperation("用户登录")
-    public Result Login(@Valid UserVo loginVo, HttpSession session) {
+    public String doLogin(@Valid UserVo loginVo, HttpSession session) {
         // 1.校验验证码
-        String capText = (String) session.getAttribute(Constants.KAPTCHA_SESSION_KEY);
-        if (!loginVo.getCaptcha().equals(capText)) {
-//            throw new RuntimeException("验证码不正确");
-            throw new GlobalException("验证码不正确");
-        }
-        session.removeAttribute(Constants.KAPTCHA_SESSION_KEY);
+        String capText = (String) session.getAttribute(com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY);
+//        if (!loginVo.getCaptcha().equals(capText)) {
+////            throw new RuntimeException("验证码不正确");
+//            throw new GlobalException("验证码不正确");
+//        }
+        // 暂时关掉验证
+//        session.removeAttribute(com.google.code.kaptcha.Constants.KAPTCHA_SESSION_KEY);
         // 2.校验用户是否存在
         List<User> userList = userService.getUserByName(loginVo.getUsername());
         if (userList.size() == 0) {
@@ -100,9 +110,10 @@ public class LoginSessionController {
             throw new GlobalException("密码不正确");
         }
         // 4.生成token并存储在session
-        session.setAttribute(Constant.LOGIN_USER, user.getName());
+//        session.setAttribute(Constants.LOGIN_USER, user.getName());
+        session.setAttribute("loginUser", user);
         // 5.其他扩展操作
-        return Result.ok();
+        return "admin/index";
     }
 
 

@@ -21,21 +21,21 @@ public class CategoryServiceImpl extends ServiceImpl<CategoryMapper, Category> i
 
     @Override
     public List<Category> getCategorieList() {
-        return null;
+        return list();
     }
 
     @Override
     public void addCategory(Category category) {
-
+        save(category);
     }
 
     @Override
     public void updateCategory(Category category) {
-
+        updateById(category);
     }
 
     @Override
     public void deleteByIds(List<Integer> idsTo) {
-
+        deleteByIds(idsTo);
     }
 }

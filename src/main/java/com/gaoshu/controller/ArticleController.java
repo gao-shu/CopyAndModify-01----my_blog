@@ -1,9 +1,19 @@
 package com.gaoshu.controller;
 
 
+import cn.hutool.db.Page;
+import com.gaoshu.common.PageEntity;
+import com.gaoshu.entity.PO.Article;
+import com.gaoshu.entity.VO.Result;
+import com.gaoshu.service.IArticleService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import org.springframework.web.bind.annotation.RestController;
+
+import java.sql.ResultSet;
+import java.util.List;
 
 /**
  * <p>
@@ -17,5 +27,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/article")
 public class ArticleController {
 
+    @Autowired
+    private IArticleService articleService;
+
+    public Result<List<Article>> getArticleList(@RequestBody PageEntity page){
+        return Result.ok(articleService.getArticleList(page));
+    }
 }
 

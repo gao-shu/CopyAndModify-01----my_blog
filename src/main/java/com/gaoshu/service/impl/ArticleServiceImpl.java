@@ -1,6 +1,7 @@
 package com.gaoshu.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.injector.methods.SelectPage;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
 import com.gaoshu.common.PageEntity;
 import com.gaoshu.entity.PO.Article;
@@ -24,24 +25,21 @@ public class ArticleServiceImpl extends ServiceImpl<ArticleMapper, Article> impl
 
     @Override
     public List<Article> getArticleList(PageEntity page) {
-        LambdaQueryWrapper<Article> queryWrapper = new LambdaQueryWrapper<>();
-        queryWrapper.eq(Article::getCategoryId, page.getCategoryId());
-        ArrayList<Article> articleList = new ArrayList<>();
-        return articleList;
+        return list();
     }
 
     @Override
     public void addArticle(Article article) {
-
+        save(article);
     }
 
     @Override
     public void updateArticle(Article article) {
-
+        updateById(article);
     }
 
     @Override
     public void deleteByIds(List<Integer> ids) {
-
+        removeByIds(ids);
     }
 }

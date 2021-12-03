@@ -1,6 +1,6 @@
 package com.gaoshu.controller.admin;
 
-import com.gaoshu.common.Constant;
+import com.gaoshu.common.Constants;
 import com.gaoshu.entity.PO.User;
 import com.gaoshu.entity.VO.Result;
 import com.gaoshu.service.IUserService;
@@ -49,7 +49,7 @@ public class BackUserController {
     @PostMapping("/updatePassword")
     @ApiOperation("修改密码")
     public Result updatePassword(String oldPassword, String newPassword, HttpSession session) {
-        String userName = (String) session.getAttribute(Constant.LOGIN_USER);
+        String userName = (String) session.getAttribute(Constants.LOGIN_USER);
         userService.updatePassword(userName, newPassword);
         // 用户退出
         session.invalidate();
