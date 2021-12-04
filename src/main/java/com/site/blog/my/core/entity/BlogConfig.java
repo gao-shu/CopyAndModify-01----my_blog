@@ -1,7 +1,10 @@
 package com.site.blog.my.core.entity;
 
+import com.baomidou.mybatisplus.annotation.TableName;
+
 import java.util.Date;
 
+@TableName("tb_config")
 public class BlogConfig {
     private String configName;
 

@@ -1,12 +1,13 @@
 package com.site.blog.my.core.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.site.blog.my.core.entity.BlogCategory;
 import com.site.blog.my.core.util.PageQueryUtil;
 import com.site.blog.my.core.util.PageResult;
 
 import java.util.List;
 
-public interface CategoryService {
+public interface CategoryService extends IService<BlogCategory> {
 
     /**
      * 查询分类的分页数据

@@ -1,14 +1,16 @@
 package com.site.blog.my.core.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.site.blog.my.core.controller.vo.BlogDetailVO;
 import com.site.blog.my.core.controller.vo.SimpleBlogListVO;
 import com.site.blog.my.core.entity.Blog;
+import com.site.blog.my.core.entity.BlogCategory;
 import com.site.blog.my.core.util.PageQueryUtil;
 import com.site.blog.my.core.util.PageResult;
 
 import java.util.List;
 
-public interface BlogService {
+public interface BlogService  extends IService<Blog> {
     String saveBlog(Blog blog);
 
     PageResult getBlogsPage(PageQueryUtil pageUtil);

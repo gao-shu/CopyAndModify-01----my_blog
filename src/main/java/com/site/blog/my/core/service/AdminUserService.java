@@ -1,8 +1,10 @@
 package com.site.blog.my.core.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
 import com.site.blog.my.core.entity.AdminUser;
+import com.site.blog.my.core.entity.BlogCategory;
 
-public interface AdminUserService {
+public interface AdminUserService  extends IService<AdminUser> {
 
     AdminUser login(String userName, String password);
 

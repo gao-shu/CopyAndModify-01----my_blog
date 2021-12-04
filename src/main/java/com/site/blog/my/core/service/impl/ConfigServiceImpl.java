@@ -1,6 +1,9 @@
 package com.site.blog.my.core.service.impl;
 
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.site.blog.my.core.dao.BlogCategoryMapper;
 import com.site.blog.my.core.dao.BlogConfigMapper;
+import com.site.blog.my.core.entity.BlogCategory;
 import com.site.blog.my.core.entity.BlogConfig;
 import com.site.blog.my.core.service.ConfigService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,7 +16,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
-public class ConfigServiceImpl implements ConfigService {
+public class ConfigServiceImpl extends ServiceImpl<BlogConfigMapper, BlogConfig> implements ConfigService {
     @Autowired
     private BlogConfigMapper configMapper;
 
@@ -34,11 +37,13 @@ public class ConfigServiceImpl implements ConfigService {
 
     @Override
     public int updateConfig(String configName, String configValue) {
-        BlogConfig blogConfig = configMapper.selectByPrimaryKey(configName);
+//        BlogConfig blogConfig = configMapper.selectByPrimaryKey(configName);
+        BlogConfig blogConfig = getById(configName);
         if (blogConfig != null) {
             blogConfig.setConfigValue(configValue);
             blogConfig.setUpdateTime(new Date());
-            return configMapper.updateByPrimaryKeySelective(blogConfig);
+//            return configMapper.updateByPrimaryKeySelective(blogConfig);
+            return updateById(blogConfig) ? 1 : 0;
         }
         return 0;
     }
@@ -46,7 +51,8 @@ public class ConfigServiceImpl implements ConfigService {
     @Override
     public Map<String, String> getAllConfigs() {
         //获取所有的map并封装为map
-        List<BlogConfig> blogConfigs = configMapper.selectAll();
+//        List<BlogConfig> blogConfigs = configMapper.selectAll();
+        List<BlogConfig> blogConfigs = list();
         Map<String, String> configMap = blogConfigs.stream().collect(Collectors.toMap(BlogConfig::getConfigName, BlogConfig::getConfigValue));
         for (Map.Entry<String, String> config : configMap.entrySet()) {
             if ("websiteName".equals(config.getKey()) && StringUtils.isEmpty(config.getValue())) {

@@ -1,5 +1,7 @@
 package com.site.blog.my.core.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.site.blog.my.core.entity.BlogCategory;
 import com.site.blog.my.core.entity.BlogLink;
 import com.site.blog.my.core.util.PageQueryUtil;
 import com.site.blog.my.core.util.PageResult;
@@ -7,7 +9,7 @@ import com.site.blog.my.core.util.PageResult;
 import java.util.List;
 import java.util.Map;
 
-public interface LinkService {
+public interface LinkService  extends IService<BlogLink> {
     /**
      * 查询友链的分页数据
      *

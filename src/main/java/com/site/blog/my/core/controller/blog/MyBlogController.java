@@ -262,7 +262,12 @@ public class MyBlogController {
         if (PatternUtil.isURL(websiteUrl)) {
             comment.setWebsiteUrl(websiteUrl);
         }
+        if (request.getHeader("x-forwarded-for") == null) {
+            comment.setCommentatorIp(request.getRemoteAddr()); ;
+        }
         comment.setCommentBody(MyBlogUtils.cleanString(commentBody));
+        comment.setCommentStatus((byte)0);
+        comment.setIsDeleted((byte)0);
         return ResultGenerator.genSuccessResult(commentService.addComment(comment));
     }
 

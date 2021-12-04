@@ -1,10 +1,12 @@
 package com.site.blog.my.core.service;
 
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.site.blog.my.core.entity.BlogCategory;
 import com.site.blog.my.core.entity.BlogComment;
 import com.site.blog.my.core.util.PageQueryUtil;
 import com.site.blog.my.core.util.PageResult;
 
-public interface CommentService {
+public interface CommentService  extends IService<BlogComment> {
     /**
      * 添加评论
      *
