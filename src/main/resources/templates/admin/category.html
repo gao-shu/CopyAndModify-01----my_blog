@@ -1,158 +1,131 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="description" content="个人博客">
-    <link rel="shortcut icon" th:href="@{/portal/images/favicon.ico}">
-    <title>MoonlightL 后台管理界面</title>
-
-    <link th:href="@{/admin/assets/plugins/sweetalert/dist/sweetalert.css}" rel="stylesheet" type="text/css">
-
-    <link th:href="@{/admin/assets/css/bootstrap.min.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/admin/assets/css/core.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/admin/assets/css/icons.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/admin/assets/css/components.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/admin/assets/css/pages.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/admin/assets/css/responsive.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/admin/assets/css/animate.css}" rel="stylesheet" type="text/css">
-    <link th:href="@{/admin/assets/plugins/waves/waves.min.css}" rel="stylesheet" >
-    <link th:href="@{/admin/assets/plugins/dropzone/dropzone.min.css}" rel="stylesheet" >
-    <script th:src="@{/admin/assets/js/modernizr.min.js}"></script>
-    <style>
-        .color-list {
-            list-style-type: none;
-        }
-        .color-list li {
-            float: left;
-            padding-left: 10px;
-        }
-    </style>
-
-    <!-- HTML5 Shim and Respond.js} IE8 support of HTML5 elements and media queries -->
-    <!-- WARNING: Respond.js} doesn't work if you view the page via file:// -->
-    <!--[if lt IE 9]>
-    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js}"></script>
-    <script src="https://oss.maxcdn.com/libs/respond.js}/1.3.0/respond.min.js}"></script>
-    <![endif]-->
-
-</head>
-<body>
-    <br>
-    <div class="container">
-        <div class="row  animated fadeIn">
-            <div class="panel panel-default m-t-20">
-                <div class="panel-body">
-                    <div class="row">
-                        <div class="col-sm-3">
-                            <div class="m-b-30">
-                                <button id="showBtn" class="btn btn-primary waves-effect waves-light">新建 <i class="fa fa-plus"></i></button>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="table-responsive">
-                        <table class="table table-hover mails" id="categoryTable">
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th>名称</th>
-                                <th>描述</th>
-                                <th>颜色</th>
-                                <th>图片</th>
-                                <th>排序</th>
-                                <th>操作</th>
-                            </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                    </div>
-
-                    <hr>
-
-                    <div class="row" id="pageBar"></div>
-
-                </div> <!-- panel body -->
-            </div> <!-- panel -->
+<header th:replace="admin/header::header-fragment">
+</header>
+<body class="hold-transition sidebar-mini">
+<div class="wrapper">
+    <!-- 引入页面头header-fragment -->
+    <div th:replace="admin/header::header-nav"></div>
+    <!-- 引入工具栏sidebar-fragment -->
+    <div th:replace="admin/sidebar::sidebar-fragment(${path})"></div>
+    <!-- Content Wrapper. Contains 图标content -->
+    <div class="content-wrapper">
+        <!-- Content Header (图标header) -->
+        <div class="content-header">
+            <div class="container-fluid">
+            </div><!-- /.container-fluid -->
         </div>
-
-    </div>
-    <div id="saveUI" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                    <h4 class="modal-title" id="myModalLabel">分类保存界面</h4>
+        <!-- Main content -->
+        <div class="content">
+            <div class="container-fluid">
+                <div class="card card-primary card-outline">
+                    <div class="card-header">
+                        <h3 class="card-title">分类管理</h3>
+                    </div> <!-- /.card-body -->
+                    <div class="card-body">
+                        <div class="grid-btn">
+                            <button class="btn btn-info" onclick="categoryAdd()"><i
+                                    class="fa fa-plus"></i>&nbsp;新增
+                            </button>
+                            <button class="btn btn-info" onclick="categoryEdit()"><i
+                                    class="fa fa-pencil-square-o"></i>&nbsp;修改
+                            </button>
+                            <button class="btn btn-danger" onclick="deleteCagegory()"><i
+                                    class="fa fa-trash-o"></i>&nbsp;删除
+                            </button>
+                        </div>
+                        <br>
+                        <table id="jqGrid" class="table table-bordered">
+                        </table>
+                        <div id="jqGridPager"></div>
+                    </div><!-- /.card-body -->
                 </div>
-                <div class="modal-body">
-                    <form class="form-horizontal" role="form" id="categoryForm">
-                        <input type="hidden" id="id" name="id">
-                        <div class="form-group">
-                            <label for="name" class="col-sm-3 control-label">* 名称</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" id="name" name="name" placeholder="名称">
-                            </div>
+            </div><!-- /.container-fluid -->
+        </div>
+        <!-- /.content -->
+        <div class="content">
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" id="categoryModal" tabindex="-1" role="dialog" aria-labelledby="categoryModalLabel">
+                <div class="modal-dialog" role="document">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span
+                                    aria-hidden="true">&times;</span></button>
+                            <h6 class="modal-title" id="categoryModalLabel">Modal</h6>
                         </div>
-                        <div class="form-group">
-                            <label for="descr" class="col-sm-3 control-label">描述</label>
-                            <div class="col-sm-9">
-                                <input type="text" class="form-control" id="descr" name="descr" placeholder="描述">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label  class="col-sm-3 control-label">颜色</label>
-                            <div class="col-sm-4" style="height: 100%;line-height: 30px">
-                                <input type="text" class="form-control" id="color" name="color" placeholder="点击右侧颜色">
-                            </div>
-                            <div class="col-sm-5"  style="height: 100%;line-height: 30px">
-                                <ul class="color-list">
-                                    <li><span class='fa fa-circle text-default text-color' data-color="text-default" style="cursor: pointer"/></li>
-                                    <li><span class='fa fa-circle text-primary text-color' data-color="text-primary" style="cursor: pointer"/></li>
-                                    <li><span class='fa fa-circle text-success text-color' data-color="text-success" style="cursor: pointer"/></li>
-                                    <li><span class='fa fa-circle text-info text-color' data-color="text-info" style="cursor: pointer"/></li>
-                                    <li><span class='fa fa-circle text-warning text-color' data-color="text-warning" style="cursor: pointer"/></li>
-                                    <li><span class='fa fa-circle text-danger text-color' data-color="text-danger" style="cursor: pointer"/></li>
-                                    <li><span class='fa fa-circle text-purple text-color' data-color="text-purple" style="cursor: pointer"/></li>
-                                    <li><span class='fa fa-circle text-pink text-color' data-color="text-pink" style="cursor: pointer"/></li>
-                                </ul>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label for="sort" class="col-sm-3 control-label">排序</label>
-                            <div class="col-sm-9">
-                                <input type="num" class="form-control" id="sort" name="sort" placeholder="排序">
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <label  class="col-sm-3 control-label">图片</label>
-                            <div class="col-sm-7">
-                                <input type="text" class="form-control" id="imgUrl" name="imgUrl" placeholder="图片">
-                                <br>
-                                <div id="fileContainer">
-                                    <div class="dz-message needsclick" id="fileUpload" style="cursor: pointer">
-                                        点击此处上传文件
+                        <div class="modal-body">
+                            <form id="categoryForm">
+                                <div class="form-group">
+                                    <div class="alert alert-danger" id="edit-error-msg" style="display: none;">
+                                        错误信息展示栏。
                                     </div>
                                 </div>
-                            </div>
-                            <div class="col-sm-2" style="height: 100%;line-height: 30px">
-                                <a id="previewBtn" href="javascript:void(0)" target="_blank">点击查看</a>
-                            </div>
+                                <input type="hidden" class="form-control" id="categoryId" name="categoryId">
+                                <div class="form-group">
+                                    <label for="categoryName" class="control-label">分类名称:</label>
+                                    <input type="text" class="form-control" id="categoryName" name="categoryName"
+                                           placeholder="请输入分类名称" required="true">
+                                </div>
+                                <div class="form-group">
+                                    <label for="categoryIcon" class="control-label">分类图标:</label>
+                                    <select class='form-control select2 image-picker' id="categoryIcon"
+                                            name="categoryIcon">
+                                        <option data-img-src='/admin/dist/img/category/00.png' value='/admin/dist/img/category/00.png'> 默认图标</option>
+                                        <option data-img-src='/admin/dist/img/category/01.png' value='/admin/dist/img/category/01.png'> 图标1</option>
+                                        <option data-img-src='/admin/dist/img/category/02.png' value='/admin/dist/img/category/02.png'> 图标2</option>
+                                        <option data-img-src='/admin/dist/img/category/03.png' value='/admin/dist/img/category/03.png'> 图标3</option>
+                                        <option data-img-src='/admin/dist/img/category/04.png' value='/admin/dist/img/category/04.png'> 图标4</option>
+                                        <option data-img-src='/admin/dist/img/category/05.png' value='/admin/dist/img/category/05.png'> 图标5</option>
+                                        <option data-img-src='/admin/dist/img/category/06.png' value='/admin/dist/img/category/06.png'> 图标6</option>
+                                        <option data-img-src='/admin/dist/img/category/07.png' value='/admin/dist/img/category/07.png'> 图标7</option>
+                                        <option data-img-src='/admin/dist/img/category/08.png' value='/admin/dist/img/category/08.png'> 图标8</option>
+                                        <option data-img-src='/admin/dist/img/category/09.png' value='/admin/dist/img/category/09.png'> 图标9</option>
+                                        <option data-img-src='/admin/dist/img/category/10.png' value='/admin/dist/img/category/10.png'> 图标10</option>
+                                        <option data-img-src='/admin/dist/img/category/11.png' value='/admin/dist/img/category/11.png'> 图标11</option>
+                                        <option data-img-src='/admin/dist/img/category/12.png' value='/admin/dist/img/category/12.png'> 图标12</option>
+                                        <option data-img-src='/admin/dist/img/category/13.png' value='/admin/dist/img/category/13.png'> 图标13</option>
+                                        <option data-img-src='/admin/dist/img/category/14.png' value='/admin/dist/img/category/14.png'> 图标14</option>
+                                        <option data-img-src='/admin/dist/img/category/15.png' value='/admin/dist/img/category/15.png'> 图标15</option>
+                                        <option data-img-src='/admin/dist/img/category/16.png' value='/admin/dist/img/category/16.png'> 图标16</option>
+                                        <option data-img-src='/admin/dist/img/category/17.png' value='/admin/dist/img/category/17.png'> 图标17</option>
+                                        <option data-img-src='/admin/dist/img/category/18.png' value='/admin/dist/img/category/18.png'> 图标18</option>
+                                        <option data-img-src='/admin/dist/img/category/19.png' value='/admin/dist/img/category/19.png'> 图标19</option>
+                                    </select>
+                                </div>
+
+                            </form>
                         </div>
-                    </form>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                            <button type="button" class="btn btn-primary" id="saveButton">确认</button>
+                        </div>
+                    </div>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default waves-effect" data-dismiss="modal">关闭</button>
-                    <button type="button" class="btn btn-primary waves-effect waves-light" id="submitBtn">保存</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
-    <script th:src="@{/admin/assets/js/jquery.min.js}"></script>
-    <script th:src="@{/admin/assets/js/bootstrap.min.js}"></script>
-    <script th:src="@{/admin/assets/plugins/waves/waves.min.js}"></script>
-    <script th:src="@{/admin/assets/plugins/sweetalert/dist/sweetalert.min.js}"></script>
-    <script th:src="@{/admin/assets/plugins/dropzone/dropzone.min.js}"></script>
-    <script th:src='@{/portal/js/layer/layer.js}'></script>
-    <script th:src="@{/admin/js/util.js}"></script>
-    <script th:src="@{/admin/js/category.js}"></script>
+            </div>
+            <!-- /.modal -->
+        </div>
+    </div>
+    <!-- /.content-wrapper -->
+    <!-- 引入页脚footer-fragment -->
+    <div th:replace="admin/footer::footer-fragment"></div>
+</div>
+<!-- jQuery -->
+<script th:src="@{/admin/plugins/jquery/jquery.min.js}"></script>
+<!-- jQuery UI 1.11.4 -->
+<script th:src="@{/admin/plugins/jQueryUI/jquery-ui.min.js}"></script>
+<!-- Bootstrap 4 -->
+<script th:src="@{/admin/plugins/bootstrap/js/bootstrap.bundle.min.js}"></script>
+<!-- AdminLTE App -->
+<script th:src="@{/admin/dist/js/adminlte.min.js}"></script>
+<!-- jqgrid -->
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/jquery.jqGrid.min.js}"></script>
+<script th:src="@{/admin/plugins/jqgrid-5.5.2/grid.locale-cn.js}"></script>
+<!-- image-picker -->
+<script th:src="@{/admin/plugins/image-picker/query.masonry.min.js}"></script>
+<script th:src="@{/admin/plugins/image-picker/image-picker.min.js}"></script>
+<!-- sweetalert -->
+<script th:src="@{/admin/plugins/sweetalert/sweetalert.min.js}"></script>
+<script th:src="@{/admin/dist/js/public.js}"></script>
+<script th:src="@{/admin/dist/js/category.js}"></script>
 </body>
 </html>
